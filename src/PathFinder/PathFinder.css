@@ -7,8 +7,8 @@
     display: grid;
     top: 100px;
     margin: auto;
-    grid-template: 1fr;
-    grid-auto-rows: 28px;
+    grid-template: repeat(20, 1fr) / repeat(40, 1fr);
+    grid-gap: 1px;
 }
 
 .row {
@@ -18,8 +18,14 @@
 }
 
 .node {
-    width: 25px;
-    height: 25px;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(220,220,220);
     border: 1px black solid;
+}
+
+.start {
+    background-color: rgb(14, 131, 53) !important;
+}
+
+.end {
+    background-color: rgb(196, 22, 22) !important;
 }
