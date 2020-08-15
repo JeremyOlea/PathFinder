@@ -7,30 +7,24 @@ class Node extends Component{
         this.state = {
             row: props.row,
             col: props.col,
-            isWall: false,
-            isStart: props.isStart != null ? props.isStart : false,
-            isEnd: props.isEnd != null ? props.isEnd : false,
-            mouseDown: false,
+            onMouseDown: props.onMouseDownFunc,
+            onMouseUp: props.onMouseUpFunc,
+            onMouseEnter: props.onMouseEnterFunc,
         };
-
-        this.handleMouseOver = this.handleMouseOver.bind(this);
-    }
-
-    handleMouseOver(event) {
-        event.preventDefault();
-        if(!this.state.isStart && !this.state.isEnd && this.state.mouseDown) {
-            this.setState({isWall : true});
-        }
     }
 
     render() {
-        let isStart = this.state.isStart;
-        let isEnd = this.state.isEnd;
-        let isWall = this.state.isWall;
+        let isStart = this.props.isStart;
+        let isEnd = this.props.isEnd;
+        let isWall = this.props.isWall;
+        let row = this.state.row;
+        let col = this.state.col;
         return(
             <div 
                 className={`node ${isStart ? 'start' : ''} ${isEnd ? 'end' : ''} ${isWall ? 'wall' : ''}`}
-                onMouseOver={this.handleMouseOver}
+                onMouseDown={() => this.state.onMouseDown(row, col)}
+                onMouseEnter={() => this.state.onMouseEnter(row, col)}
+                onMouseUp={() => this.state.onMouseUp()}
             >
 
             </div>
