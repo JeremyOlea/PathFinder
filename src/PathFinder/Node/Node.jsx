@@ -20,14 +20,14 @@ class Node extends Component{
         let row = this.state.row;
         let col = this.state.col;
         return(
-            <div 
+            <button 
                 className={`node ${isStart ? 'start' : ''} ${isEnd ? 'end' : ''} ${isWall ? 'wall' : ''}`}
                 onMouseDown={() => this.state.onMouseDown(row, col)}
                 onMouseEnter={() => this.state.onMouseEnter(row, col)}
                 onMouseUp={() => this.state.onMouseUp()}
             >
 
-            </div>
+            </button>
         );
     }
 

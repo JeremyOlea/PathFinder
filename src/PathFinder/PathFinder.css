@@ -16,16 +16,3 @@
     flex-direction: row;
     grid-template: repeat(10, 1fr);
 }
-
-.node {
-    background-color: rgb(220,220,220);
-    border: 1px black solid;
-}
-
-.start {
-    background-color: rgb(14, 131, 53) !important;
-}
-
-.end {
-    background-color: rgb(196, 22, 22) !important;
-}
