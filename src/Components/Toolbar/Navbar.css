@@ -1,0 +1,25 @@
+.main-container {
+    display: inline;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: row;
+    margin-left: 30px;
+    padding: 20px;
+}
+
+.radio-buttons {
+    margin-left: 50px;
+}
+.drop-down {
+    margin-left: 50px;
+}
+
+.spacing {
+   padding: 20px;
+}
+
+/* .MuiRadio-colorPrimary {
+    color: white;
+} */

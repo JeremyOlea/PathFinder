@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './PathFinder.css';
 import Node from './Node/Node.jsx';
 import dijkstra from '../Algorithms/Dijkstra.jsx';
+import Navbar from '../Components/Toolbar/Navbar.jsx';
 
 class PathFinder extends Component {
     constructor() {
@@ -153,6 +154,7 @@ class PathFinder extends Component {
         }
         return (
             <div>
+                <Navbar></Navbar>
                 <button onClick={this.runAlgorithm}>
                     Dijkstra
                 </button>
