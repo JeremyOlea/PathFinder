@@ -9,15 +9,25 @@ class PathFinder extends Component {
         this.state = {
             grid: [],
             mouseDown: false,
+            animating: false,
         };
 
         // this.handleMouseDown = this.handleMouseDown.bind(this);
         // this.handelMouseUp = this.handelMouseUp.bind(this);
         // this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.runAlgorithm = this.runAlgorithm.bind(this);
+        this.initGrid = this.initGrid.bind(this);
+        this.clearBoard = this.clearBoard.bind(this);
     }
 
     componentDidMount() {
+        let {grid, startNode, endNode} = this.initGrid();
+        this.setState({grid: grid});
+        this.setState({startNode: startNode});
+        this.setState({endNode: endNode});
+    }
+
+    initGrid() {
         let grid = [];
         for(let i = 0; i < 20; i++) {
             let row = []
@@ -25,9 +35,9 @@ class PathFinder extends Component {
                 row.push({
                     'row': i,
                     'col': j,
-                    'isWall': (i === 10 && j === 10),
-                    'isStart': (i === 0 && j === 0),
-                    'isEnd': (i === 19 && j === 39),
+                    'isWall': false,
+                    'isStart': (i === 7 && j === 10),
+                    'isEnd': (i === 7 && j === 29),
                     'distance': Infinity,
                     'prevNode': null,
                 });
@@ -47,14 +57,11 @@ class PathFinder extends Component {
             }
         }
 
-        this.setState({grid: grid})
-        this.setState({startNode: startNode})
-        this.setState({endNode: endNode})
-        console.log(startNode);
+        return {grid, startNode, endNode};
     }
 
     handleMouseEnter(row, col) {
-        if (this.state.mouseDown) {
+        if (this.state.mouseDown && !this.state.animating) {
             let newGrid = this.state.grid.slice();
             newGrid[row][col]['isWall'] = !newGrid[row][col]['isWall'];
             this.setState({grid: newGrid});
@@ -62,9 +69,13 @@ class PathFinder extends Component {
     }
 
     handleMouseDown(row, col) {
-        let newGrid = this.state.grid.slice();
-        newGrid[row][col]['isWall'] = !newGrid[row][col]['isWall'];
-        this.setState({grid: newGrid, mouseDown: true});
+        if(!this.state.animating) {
+            let newGrid = this.state.grid.slice();
+            newGrid[row][col]['isWall'] = !newGrid[row][col]['isWall'];
+            this.setState({grid: newGrid, mouseDown: true});
+        } else {
+            this.setState({mouseDown: false});
+        }
     }
 
     handelMouseUp() {
@@ -73,7 +84,46 @@ class PathFinder extends Component {
 
     runAlgorithm() {
         console.log('calling');
-        dijkstra(this.state.grid, this.state.startNode, this.state.endNode);
+        let {visitedOrder, shortestPath} = dijkstra(this.state.grid, this.state.startNode, this.state.endNode);
+        this.animateAlgorithm(visitedOrder, shortestPath)
+    }
+
+    async animateAlgorithm(visitedOrder, shortestPath) {
+        this.setState({animating: true});
+        for(let i = 0; i < visitedOrder.length + shortestPath.length; i++) {
+            setTimeout(() => {
+                if(i < visitedOrder.length) {
+                    const node = visitedOrder[i];
+                    let className = document.getElementById(`${node.row}-${node.col}`).className;
+                    document.getElementById(`${node.row}-${node.col}`).className = className + ' visited';
+                }
+                else {
+                    let shortest = shortestPath.slice();
+                    while(shortest.length != 0) {
+                        let node = shortest.pop();
+                        let className = document.getElementById(`${node.row}-${node.col}`).className;
+                        document.getElementById(`${node.row}-${node.col}`).className = className + ' shortestPath';
+                    }
+                }
+            }, 10 * i);
+        }
+    }
+
+    clearBoard() {
+        this.setState({animating : false});
+        let {grid, startNode, endNode} = this.initGrid();
+        this.setState({grid: grid});
+        this.setState({startNode: startNode});
+        this.setState({endNode: endNode});
+        for(let i = 0; i < this.state.grid.length; i++) {
+            for(let j = 0; j < this.state.grid[i].length; j++) {
+                let isStart = grid[i][j]['isStart'];
+                let isEnd = grid[i][j]['isEnd'];
+                let isWall = grid[i][j]['isWall'];
+                let node = grid[i][j];
+                document.getElementById(`${node.row}-${node.col}`).className = `node ${isStart ? 'start' : ''} ${isEnd ? 'end' : ''} ${isWall ? 'wall' : ''}`
+            }
+        }
     }
 
     render() {
@@ -98,6 +148,9 @@ class PathFinder extends Component {
             <div>
                 <button onClick={this.runAlgorithm}>
                     Dijkstra
+                </button>
+                <button onClick={this.clearBoard}>
+                    Clear
                 </button>
                 <div className='grid' onMouseLeave={() => this.setState({mouseDown : false})}>
                     {screenGrid}

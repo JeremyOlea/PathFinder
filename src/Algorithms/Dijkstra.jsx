@@ -13,16 +13,6 @@ const dijkstra = (grid, start, end) => {
 
     grid[start['row']][start['col']]['distance'] = 0;
 
-    // for(let i = 0; i < grid.length; i++) {
-    //     for(let j = 0; j < grid[0].length; j++) {
-    //         if(i == start.row && j == start.col) {
-    //             grid[i][j]['distance'] = 0;
-    //         } else {
-    //             grid[i][j]['distance'] = Infinity;
-    //         }
-    //     }
-    // }
-
     pq.queue(grid[start['row']][start['col']]);
     while(pq.length != 0) {
         let node = pq.dequeue();
@@ -52,24 +42,31 @@ const dijkstra = (grid, start, end) => {
                     if(newNode['isEnd']) {
                         visited.add(newNode);
                         visitedOrder.push(newNode);
+                        newNode['prevNode'] = node;
                         shortestPath = getShortestPath(newNode);
                         return {visitedOrder, shortestPath};
                     }
                     let dist = 1;
-                    if (node.distance + dist < grid[nextRow][nextCol].distance) {
-                        grid[nextRow][nextCol]['prevNode'] = node;
-                        grid[nextRow][nextCol]['distance'] = node.distance + dist;
+                    if (node['distance'] + dist < newNode['distance']) {
+                        newNode['prevNode'] = node;
+                        newNode['distance'] = node.distance + dist;
                     }
                     pq.queue(grid[nextRow][nextCol]);
                 }
         }
     }
-    console.log('ending');
     return {visitedOrder, shortestPath};
 }
 
 const getShortestPath = (node) => {
-    
+    let shortestPath = []
+    let currNode = node
+    while(currNode != null && !currNode['isStart']) {
+        shortestPath.push(currNode);
+        currNode = currNode['prevNode'];
+    }
+    shortestPath.push(currNode);
+    return shortestPath;
 }
 
 export default dijkstra;

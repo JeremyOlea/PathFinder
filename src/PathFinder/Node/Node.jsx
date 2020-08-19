@@ -21,6 +21,7 @@ class Node extends Component{
         let col = this.state.col;
         return(
             <button 
+                id={`${row}-${col}`}
                 className={`node ${isStart ? 'start' : ''} ${isEnd ? 'end' : ''} ${isWall ? 'wall' : ''}`}
                 onMouseDown={() => this.state.onMouseDown(row, col)}
                 onMouseEnter={() => this.state.onMouseEnter(row, col)}
