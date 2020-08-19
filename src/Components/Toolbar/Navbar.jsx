@@ -3,23 +3,38 @@ import './Navbar.css';
 import { AppBar, Toolbar, Button, Typography } from '@material-ui/core';
 import { Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@material-ui/core/';
 import { Select, InputLabel } from '@material-ui/core/';
+import { makeStyles, styled } from '@material-ui/core/styles';
 
-const styles = theme => {
-    root: {
-       borderBottom: '1px solid white',
-    },
-    icon: {
-       fill: 'white',
-    },
-}
+const MySelect = styled(Select)({
+    color: 'white',
+})
+
+const MyInputLabel = styled(InputLabel)({
+    color: 'white',
+})
 
 class Navbar extends Component {
+
+    useStyles() {
+        makeStyles({
+            root: {
+              background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+              border: 0,
+              borderRadius: 3,
+              boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+              color: 'white',
+              height: 48,
+              padding: '0 30px',
+            },
+          });
+    }
 
     handleChange(event) {
         console.log('changed');
     }
 
     render() {
+        const classes = this.useStyles();
         return(
             <div>
                 <AppBar>
@@ -31,8 +46,8 @@ class Navbar extends Component {
                     {/* Drop Down */}
                         <div className='drop-down'>
                             <FormControl>
-                                <InputLabel htmlFor="algorithm-native-simple">Algorithm</InputLabel>
-                                <Select
+                                <MyInputLabel htmlFor="algorithm-native-simple">Algorithm</MyInputLabel>
+                                <MySelect
                                 native
                                 onChange={this.handleChange}
                                 inputProps={{
@@ -41,7 +56,7 @@ class Navbar extends Component {
                                 }}
                                 >
                                 <option value={"Dijkstra"}>Dijkstra</option>
-                                </Select>
+                                </MySelect>
                             </FormControl>
                         </div>
 
