@@ -10,6 +10,7 @@ class PathFinder extends Component {
             grid: [],
             mouseDown: false,
             animating: false,
+            animatingDone: false,
         };
 
         // this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -83,14 +84,15 @@ class PathFinder extends Component {
     }
 
     runAlgorithm() {
-        console.log('calling');
-        let {visitedOrder, shortestPath} = dijkstra(this.state.grid, this.state.startNode, this.state.endNode);
-        this.animateAlgorithm(visitedOrder, shortestPath)
+        if(!this.state.animating) {
+            let {visitedOrder, shortestPath} = dijkstra(this.state.grid, this.state.startNode, this.state.endNode);
+            this.animateAlgorithm(visitedOrder, shortestPath)
+        }
     }
 
     async animateAlgorithm(visitedOrder, shortestPath) {
         this.setState({animating: true});
-        for(let i = 0; i < visitedOrder.length + shortestPath.length; i++) {
+        for(let i = 0; i < visitedOrder.length + shortestPath.length + 1; i++) {
             setTimeout(() => {
                 if(i < visitedOrder.length) {
                     const node = visitedOrder[i];
@@ -104,13 +106,16 @@ class PathFinder extends Component {
                         let className = document.getElementById(`${node.row}-${node.col}`).className;
                         document.getElementById(`${node.row}-${node.col}`).className = className + ' shortestPath';
                     }
+                    if(i == visitedOrder.length + shortestPath.length) {
+                        this.setState({animatingDone: true});
+                    }
                 }
             }, 10 * i);
         }
     }
 
     clearBoard() {
-        this.setState({animating : false});
+        if(!this.state.animatingDone) return;
         let {grid, startNode, endNode} = this.initGrid();
         this.setState({grid: grid});
         this.setState({startNode: startNode});
@@ -124,6 +129,7 @@ class PathFinder extends Component {
                 document.getElementById(`${node.row}-${node.col}`).className = `node ${isStart ? 'start' : ''} ${isEnd ? 'end' : ''} ${isWall ? 'wall' : ''}`
             }
         }
+        this.setState({animating : false});
     }
 
     render() {

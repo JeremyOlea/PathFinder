@@ -1,7 +1,6 @@
 import PriorityQueue from "js-priority-queue";
 
 const dijkstra = (grid, start, end) => {
-    console.log('dijkstra');
     let visited = new Set()
     let visitedOrder = [];
     let shortestPath = [];
