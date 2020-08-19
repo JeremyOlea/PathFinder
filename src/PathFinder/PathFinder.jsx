@@ -116,6 +116,7 @@ class PathFinder extends Component {
 
     clearBoard() {
         if(!this.state.animatingDone) return;
+        this.setState({animatingDone : false});
         let {grid, startNode, endNode} = this.initGrid();
         this.setState({grid: grid});
         this.setState({startNode: startNode});
