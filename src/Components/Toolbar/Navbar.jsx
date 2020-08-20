@@ -46,7 +46,7 @@ class Navbar extends Component {
                     {/* Drop Down */}
                         <div className='drop-down'>
                             <FormControl>
-                                <MyInputLabel htmlFor="algorithm-native-simple">Algorithm</MyInputLabel>
+                                {/* <MyInputLabel htmlFor="algorithm-native-simple">Algorithm</MyInputLabel> */}
                                 <MySelect
                                 native
                                 onChange={this.handleChange}
@@ -63,7 +63,7 @@ class Navbar extends Component {
                     {/* Bullet Select */}
                         <div className='radio-buttons'>
                             <FormControl component="fieldset">
-                                <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                                <RadioGroup row aria-label="position" name="position" defaultValue="Place Walls" onChange={(event) => this.props.onSelectAction(event)}>
                                     <FormControlLabel
                                         value="Place Walls"
                                         control={<Radio color="default" />}
@@ -94,11 +94,11 @@ class Navbar extends Component {
 
                     {/* Buttons */}
                         <div className='button-row'>
-                            <Button variant="contained" color='secondary'>
+                            <Button variant="contained" color='secondary' onClick={() => this.props.onVisualize()}>
                                 Visualize
                             </Button>
                             <div className='spacing'></div>
-                            <Button variant="contained" color='secondary'>
+                            <Button variant="contained" color='secondary' onClick={() => this.props.onClear()}>
                                 Clear
                             </Button>
                         </div>

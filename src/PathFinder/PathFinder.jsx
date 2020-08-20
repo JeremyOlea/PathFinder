@@ -134,6 +134,14 @@ class PathFinder extends Component {
         this.setState({animating : false});
     }
 
+    selectAlgorithm() {
+        console.log('select algorithm');
+    }
+
+    setAction(event) {
+        console.log(event.target.value);
+    }
+
     render() {
         let grid = this.state.grid;
         const screenGrid = []
@@ -154,13 +162,12 @@ class PathFinder extends Component {
         }
         return (
             <div>
-                <Navbar></Navbar>
-                <button onClick={this.runAlgorithm}>
-                    Dijkstra
-                </button>
-                <button onClick={this.clearBoard}>
-                    Clear
-                </button>
+                <Navbar 
+                onVisualize={() => this.runAlgorithm()} 
+                onClear={() => this.clearBoard()}
+                onSelectAlgorithm={() => this.selectAlgorithm()}
+                onSelectAction={(event) => this.setAction(event)}
+                ></Navbar>
                 <div className='grid' onMouseLeave={() => this.setState({mouseDown : false})}>
                     {screenGrid}
                 </div>
