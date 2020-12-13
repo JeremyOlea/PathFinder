@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './PathFinder.css';
 import Node from './Node/Node.jsx';
 import dijkstra from '../Algorithms/Dijkstra.jsx';
+import astar from '../Algorithms/Astar.jsx';
 import Navbar from '../Components/Toolbar/Navbar.jsx';
 
 class PathFinder extends Component {
@@ -12,6 +13,8 @@ class PathFinder extends Component {
             mouseDown: false,
             animating: false,
             animatingDone: false,
+            action: "Place Walls",
+            algorithm: 'Dijkstra',
         };
 
         // this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -65,16 +68,60 @@ class PathFinder extends Component {
     handleMouseEnter(row, col) {
         if (this.state.mouseDown && !this.state.animating) {
             let newGrid = this.state.grid.slice();
-            newGrid[row][col]['isWall'] = !newGrid[row][col]['isWall'];
-            this.setState({grid: newGrid});
+            if(this.state.action == 'Place Walls' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+                newGrid[row][col]['isWall'] = true;
+                this.setState({grid: newGrid});
+            }
+            else if(this.state.action == 'Remove Walls' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+                newGrid[row][col]['isWall'] = false;
+                this.setState({grid: newGrid});
+            }
+            // else if(this.state.action == 'Move Start' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+            //     let startNode = this.state.startNode;
+            //     newGrid[startNode['row']][startNode['col']]['isStart'] = false;
+            //     newGrid[row][col]['isStart'] = true;
+            //     let newStart = newGrid[row][col];
+            //     this.setState({grid: newGrid});
+            //     this.setState({startNode: newStart});
+            // }
+            // else if(this.state.action == 'Move End' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+            //     let endNode = this.state.startNode;
+            //     newGrid[endNode['row']][endNode['col']]['isEnd'] = false;
+            //     newGrid[row][col]['isEnd'] = true;
+            //     let newEnd = newGrid[row][col];
+            //     this.setState({grid: newGrid});
+            //     this.setState({endNode: newEnd});
+            // }
         }
     }
 
     handleMouseDown(row, col) {
         if(!this.state.animating) {
             let newGrid = this.state.grid.slice();
-            newGrid[row][col]['isWall'] = !newGrid[row][col]['isWall'];
-            this.setState({grid: newGrid, mouseDown: true});
+            if(this.state.action == 'Place Walls' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+                newGrid[row][col]['isWall'] = true;
+                this.setState({grid: newGrid, mouseDown: true});
+            }
+            else if(this.state.action == 'Remove Walls' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+                newGrid[row][col]['isWall'] = false;
+                this.setState({grid: newGrid, mouseDown: true});
+            }
+            else if(this.state.action == 'Move Start' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+                let startNode = this.state.startNode;
+                newGrid[startNode['row']][startNode['col']]['isStart'] = false;
+                newGrid[row][col]['isStart'] = true;
+                let newStart = newGrid[row][col];
+                this.setState({grid: newGrid, mouseDown: true});
+                this.setState({startNode: newStart});
+            }
+            else if(this.state.action == 'Move End' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
+                let endNode = this.state.endNode;
+                newGrid[endNode['row']][endNode['col']]['isEnd'] = false;
+                newGrid[row][col]['isEnd'] = true;
+                let newEnd = newGrid[row][col];
+                this.setState({grid: newGrid, mouseDown: true});
+                this.setState({endNode: newEnd});
+            }
         } else {
             this.setState({mouseDown: false});
         }
@@ -86,8 +133,14 @@ class PathFinder extends Component {
 
     runAlgorithm() {
         if(!this.state.animating) {
-            let {visitedOrder, shortestPath} = dijkstra(this.state.grid, this.state.startNode, this.state.endNode);
-            this.animateAlgorithm(visitedOrder, shortestPath)
+            if(this.state.algorithm == 'Dijkstra') {
+                let {visitedOrder, shortestPath} = dijkstra(this.state.grid, this.state.startNode, this.state.endNode);
+                this.animateAlgorithm(visitedOrder, shortestPath);
+            }
+            else if(this.state.algorithm == 'A* Search') {
+                let {visitedOrder, shortestPath} = astar(this.state.grid, this.state.startNode, this.state.endNode);
+                this.animateAlgorithm(visitedOrder, shortestPath);
+            }
         }
     }
 
@@ -116,7 +169,7 @@ class PathFinder extends Component {
     }
 
     clearBoard() {
-        if(!this.state.animatingDone) return;
+        if(!this.state.animatingDone && this.state.animating) return;
         this.setState({animatingDone : false});
         let {grid, startNode, endNode} = this.initGrid();
         this.setState({grid: grid});
@@ -134,12 +187,18 @@ class PathFinder extends Component {
         this.setState({animating : false});
     }
 
-    selectAlgorithm() {
-        console.log('select algorithm');
+    selectAlgorithm(event) {
+        if(event.target.value == 'Dijkstra') {
+            this.setState({algorithm: 'Dijkstra'});
+        }
+        else if(event.target.value == 'A* Search') {
+            this.setState({algorithm: 'A* Search'});
+        }
     }
 
     setAction(event) {
-        console.log(event.target.value);
+        // console.log(event.target.value);
+        this.setState({action: event.target.value});
     }
 
     render() {
@@ -165,7 +224,7 @@ class PathFinder extends Component {
                 <Navbar 
                 onVisualize={() => this.runAlgorithm()} 
                 onClear={() => this.clearBoard()}
-                onSelectAlgorithm={() => this.selectAlgorithm()}
+                onSelectAlgorithm={(event) => this.selectAlgorithm(event)}
                 onSelectAction={(event) => this.setAction(event)}
                 ></Navbar>
                 <div className='grid' onMouseLeave={() => this.setState({mouseDown : false})}>

@@ -6,7 +6,11 @@ import { Select, InputLabel } from '@material-ui/core/';
 import { makeStyles, styled } from '@material-ui/core/styles';
 
 const MySelect = styled(Select)({
-    color: 'white',
+    color: 'black',
+})
+
+const MyOption = styled(Option)({
+    color: 'black',
 })
 
 const MyInputLabel = styled(InputLabel)({
@@ -49,13 +53,14 @@ class Navbar extends Component {
                                 {/* <MyInputLabel htmlFor="algorithm-native-simple">Algorithm</MyInputLabel> */}
                                 <MySelect
                                 native
-                                onChange={this.handleChange}
+                                onChange={(event) => this.props.onSelectAlgorithm(event)}
                                 inputProps={{
                                     name: 'Algorithm',
                                     id: 'algorithm-native-simple',
                                 }}
                                 >
                                 <option value={"Dijkstra"}>Dijkstra</option>
+                                <option value={"A* Search"}>A*Search</option>
                                 </MySelect>
                             </FormControl>
                         </div>
