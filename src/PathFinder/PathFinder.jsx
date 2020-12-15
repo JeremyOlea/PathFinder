@@ -76,6 +76,7 @@ class PathFinder extends Component {
                 newGrid[row][col]['isWall'] = false;
                 this.setState({grid: newGrid});
             }
+            // Don't need this because we are not dragging start and end nodes
             // else if(this.state.action == 'Move Start' && !newGrid[row][col]['isEnd'] && !newGrid[row][col]['isStart']) {
             //     let startNode = this.state.startNode;
             //     newGrid[startNode['row']][startNode['col']]['isStart'] = false;

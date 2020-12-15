@@ -6,7 +6,7 @@ import { Select, InputLabel } from '@material-ui/core/';
 import { makeStyles, styled } from '@material-ui/core/styles';
 
 const MySelect = styled(Select)({
-    color: 'black',
+    color: 'white',
 })
 
 const MyOption = styled(Option)({
@@ -51,7 +51,7 @@ class Navbar extends Component {
                         <div className='drop-down'>
                             <FormControl>
                                 {/* <MyInputLabel htmlFor="algorithm-native-simple">Algorithm</MyInputLabel> */}
-                                <MySelect
+                                <Select
                                 native
                                 onChange={(event) => this.props.onSelectAlgorithm(event)}
                                 inputProps={{
@@ -59,9 +59,9 @@ class Navbar extends Component {
                                     id: 'algorithm-native-simple',
                                 }}
                                 >
-                                <option value={"Dijkstra"}>Dijkstra</option>
-                                <option value={"A* Search"}>A*Search</option>
-                                </MySelect>
+                                    <option value={"Dijkstra"}>Dijkstra</option>
+                                    <option value={"A* Search"}>A*Search</option>
+                                </Select>
                             </FormControl>
                         </div>
 
